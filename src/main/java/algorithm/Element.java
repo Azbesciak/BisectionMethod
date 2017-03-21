@@ -4,29 +4,59 @@ import java.math.BigDecimal;
 
 class Element {
 
-	private BigDecimal factor;
+	private final static int SINGLE_VARIABLE = 0;
+	private final static int JUST_VALUE = 1;
+	private final static int VALUE_WITH_POWER = 2;
+	private final static int INTERVAL_AS_VALUE = 3;
+	private final static int INTERVAL_WITH_EXPONENT = 4;
+
+	private Interval factor;
 	private Integer exponent;
 	private String stringify;
-	Element(String[] array) {
-		if (array.length >= 1) {
-			String factor = array[0];
-//				if (factor.contains("V"))
-			if ("".equals(factor)) {
-				factor = "1";
-			} else {
-				factor = factor.replace(",", ".");
+	private int precision;
+	Element(String[] array, int precision) {
+		this.precision = precision;
+		switch(array.length) {
+
+			case VALUE_WITH_POWER: {
+				exponent = Integer.valueOf(array[1]);
 			}
-			this.factor = new BigDecimal(factor);
+			case JUST_VALUE: {
+				prepareSingleValueElement(array[0]);
+				break;
+			}
+			case INTERVAL_WITH_EXPONENT: {
+				exponent = Integer.valueOf(array[3]);
+			}
+			case INTERVAL_AS_VALUE: {
+				prepareIntervalElement(array);
+			}
+			default: break;
 		}
-		if (array.length == 2) {
-			exponent = Integer.valueOf(array[1]);
-		} else {
-			exponent = 0;
+		if (factor == null) {
+			factor = new Interval(BigDecimal.ONE, precision);
 		}
-		if (array.length == 0) {
-			this.factor = BigDecimal.ONE;
-			this.exponent = 1;
+		if (exponent == null) {
+			exponent = 1;
 		}
+	}
+
+	private void prepareSingleValueElement(String value) {
+		String factor = value;
+		if ("+".equals(factor) || "".equals(factor)) {
+			factor = "1";
+		} else if ("-".equals(factor)) {
+			factor = "-1";
+		}
+		final BigDecimal temp = new BigDecimal(factor);
+		this.factor = new Interval(temp.setScale(precision, BigDecimal.ROUND_DOWN),
+								   temp.setScale(precision, BigDecimal.ROUND_UP),
+								   precision);
+	}
+
+	private void prepareIntervalElement(String [] array) {
+		final Interval interval = new Interval(array[1], array[2], precision);
+		factor = "-".equals(array[0]) ? interval.negate() : interval;
 	}
 
 	public void multiplyBySign(String sign) {
@@ -54,11 +84,12 @@ class Element {
 		}
 		return result;
 	}
-	public BigDecimal getFactor() {
+
+	public Interval getFactor() {
 		return factor;
 	}
 
-	public void setFactor(BigDecimal factor) {
+	public void setFactor(Interval factor) {
 		this.factor = factor;
 	}
 
@@ -72,7 +103,7 @@ class Element {
 
 	@Override
 	public String toString() {
-		String result = String.valueOf(factor);
+		String result = factor.toString();
 		if (exponent > 0) {
 			if ("1".equals(result)) {
 				result = "";

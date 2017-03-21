@@ -72,7 +72,8 @@ public class MainController implements Initializable {
 						.or(precisionInput.textProperty().isEmpty())
 		);
 		startButton.setOnAction(event -> {
-			final String polynomial = polynomialInput.getText().replace(",", ".");
+			final String polynomial = polynomialInput.getText()
+					.replace(",", ".").replaceAll("\\s+", "").replace("+"," +").replace("-", " -");
 			final String lowerBound = lowerBoundInput.getText().replace(",", ".");
 			final String upperBound = upperBoundInput.getText().replace(",", ".");
 			final String scopeEpsilon = scopeEpsilonInput.getText().replace(",", ".");
