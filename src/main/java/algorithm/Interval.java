@@ -1,14 +1,24 @@
 package algorithm;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
-class Interval {
+public class Interval {
 	private final BigDecimal lower;
 	private final BigDecimal upper;
 	private final BigDecimal delta;
 	private final int precision;
+	private static NumberFormat formatter;
+
+	static {
+		formatter = new DecimalFormat("0.#E0");
+		formatter.setMinimumFractionDigits(Constants.BASE_PRECISION);
+		formatter.setRoundingMode(RoundingMode.HALF_UP);
+	}
 
 	Interval(String point, int precision) {
 		this(new BigDecimal(point), precision);
@@ -35,24 +45,24 @@ class Interval {
 		this.delta = upper.subtract(lower);
 	}
 
-	public BigDecimal getUpper() {
+	BigDecimal getUpper() {
 		return upper;
 	}
 
-	public BigDecimal getLower() {
+	BigDecimal getLower() {
 		return lower;
 	}
 
-	public BigDecimal getCenterPoint() {
+	BigDecimal getCenterPoint() {
 
 		return lower.add(upper).divide(new BigDecimal(2.0), precision, BigDecimal.ROUND_HALF_UP);
 	}
 
-	public boolean isPoint() {
+	private boolean isPoint() {
 		return lower.equals(upper);
 	}
 
-	public Interval findSubInterval(Polynomial polynomial) {
+	Interval findSubInterval(Polynomial polynomial) {
 		final BigDecimal centerPoint = getCenterPoint();
 		final Interval lowerInterval = new Interval(lower, centerPoint, precision);
 		if (polynomial.canBeComputedWith(lowerInterval, precision)) {
@@ -62,24 +72,24 @@ class Interval {
 		}
 	}
 
-	public boolean isLowerOrEqualValueWithAbs(BigDecimal value) {
+	boolean isLowerOrEqualValueWithAbs(BigDecimal value) {
 		final BigDecimal lowerAbs = lower.abs();
 		final BigDecimal higherAbs = upper.abs();
 		final BigDecimal furtherFromZero = lowerAbs.max(higherAbs);
 		return furtherFromZero.compareTo(value) <= 0;
 	}
 
-	public boolean isNarrowerThan(BigDecimal width) {
+	boolean isNarrowerThan(BigDecimal width) {
 		return upper.subtract(lower).compareTo(width) <= 0;
 	}
 
-	public Interval add(Interval other) {
+	Interval add(Interval other) {
 		final BigDecimal lower = this.lower.add(other.lower);
 		final BigDecimal higher = this.upper.add(other.upper);
 		return new Interval(lower, higher, precision);
 	}
 
-	public Interval sum(Interval other) {
+	Interval sum(Interval other) {
 		final BigDecimal lower = this.lower.compareTo(other.lower) < 0 ? this.lower : other.lower;
 		final BigDecimal higher = this.upper.compareTo(other.upper) > 0 ? this.upper : other.upper;
 		return new Interval(lower, higher, precision);
@@ -91,7 +101,7 @@ class Interval {
 		return lowerInterval.sum(higherInterval);
 	}
 
-	public Interval multiplyByValue(BigDecimal value) {
+	Interval multiplyByValue(BigDecimal value) {
 		final BigDecimal lowerValue = value
 				.setScale(precision, BigDecimal.ROUND_DOWN);
 		final BigDecimal higherValue = value
@@ -123,19 +133,34 @@ class Interval {
 		}
 	}
 
-	public String getIntervalWithDelta() {
-		return this + " \u0394 " + delta.stripTrailingZeros().toEngineeringString();
-	}
-
-	public Interval negate() {
+	Interval negate() {
 		return new Interval(upper.negate(), lower.negate(), precision);
 	}
+
+	private String formatValue(BigDecimal value) {
+		return formatter.format(value);
+	}
+
+	public String getIntervalWithDelta() {
+		return toScientificString() + " \u0394 " + formatValue(delta);
+	}
+
 	@Override
 	public String toString() {
+		return toSimpleString();
+	}
+
+	private String toSimpleString() {
 		if (isPoint()) {
 			return lower.stripTrailingZeros().toEngineeringString();
 		}
-		return "[" + lower.stripTrailingZeros().toEngineeringString() +", " +
-				upper.stripTrailingZeros().toEngineeringString() + "]";
+		return "[" + lower.stripTrailingZeros().toEngineeringString() +", " + upper.stripTrailingZeros().toEngineeringString() + "]";
+	}
+
+	private String toScientificString() {
+		if (isPoint()) {
+			return formatValue(lower);
+		}
+		return "[" + formatValue(lower) +", " + formatValue(upper) + "]";
 	}
 }

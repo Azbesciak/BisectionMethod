@@ -72,8 +72,7 @@ public class MainController implements Initializable {
 						.or(precisionInput.textProperty().isEmpty())
 		);
 		startButton.setOnAction(event -> {
-			final String polynomial = polynomialInput.getText()
-					.replace(",", ".").replaceAll("\\s+", "").replace("+"," +").replace("-", " -");
+			final String polynomial = preparePolynomialForAlgorithm(polynomialInput.getText());
 			final String lowerBound = lowerBoundInput.getText().replace(",", ".");
 			final String upperBound = upperBoundInput.getText().replace(",", ".");
 			final String scopeEpsilon = scopeEpsilonInput.getText().replace(",", ".");
@@ -95,6 +94,14 @@ public class MainController implements Initializable {
 			}
 		});
 	}
+
+	private String preparePolynomialForAlgorithm(String polynomial) {
+		return polynomial.replace(",", ".").replaceAll("\\s+", "")
+				.replaceAll("((?![eE])[a-zA-Z])(\\s*([^\\^\\s]|$))", "$1^1$3")	//if variable hasn't exponent, it is
+				// added
+																			// with 0 power.
+				.replaceAll("([^eE])([+-])", "$1 $2"); //adding spaces before +/- signs except those after exponent
+	}
 	@FXML
 	private void showResultCustomWindow(Result result, ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -107,6 +114,7 @@ public class MainController implements Initializable {
 		stage.setTitle("Result");
 		stage.setScene(scene);
 		stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+		stage.setResizable(false);
 		stage.show();
 	}
 

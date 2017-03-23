@@ -27,8 +27,8 @@ public class ResultController implements Initializable {
 
 	public void setResult(Result result) {
 		iterationsField.setText(String.valueOf(result.getIteration()));
-		scopeField.setText(String.valueOf(result.getScope()));
-		resultField.setText(String.valueOf(result.getResult()));
+		scopeField.setText(result.getScope().getIntervalWithDelta());
+		resultField.setText(result.getResult().getIntervalWithDelta());
 		reasonField.setText(result.getReason());
 	}
 }

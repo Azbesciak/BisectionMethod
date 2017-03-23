@@ -37,7 +37,7 @@ class Element {
 			factor = new Interval(BigDecimal.ONE, precision);
 		}
 		if (exponent == null) {
-			exponent = 1;
+			exponent = 0;
 		}
 	}
 
@@ -49,8 +49,10 @@ class Element {
 			factor = "-1";
 		}
 		final BigDecimal temp = new BigDecimal(factor);
-		this.factor = new Interval(temp.setScale(precision, BigDecimal.ROUND_DOWN),
-								   temp.setScale(precision, BigDecimal.ROUND_UP),
+		final BigDecimal lower = temp.setScale(precision, BigDecimal.ROUND_DOWN);
+		final BigDecimal upper = temp.setScale(precision, BigDecimal.ROUND_UP);
+		this.factor = new Interval(lower.min(upper),
+								   upper.max(lower),
 								   precision);
 	}
 

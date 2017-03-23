@@ -13,6 +13,7 @@ public class Main extends Application {
 		primaryStage.getIcons().add(new Image("./stack-overflow.png"));
 		primaryStage.setTitle("Bisection Method");
 		primaryStage.setScene(new Scene(root));
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
 
