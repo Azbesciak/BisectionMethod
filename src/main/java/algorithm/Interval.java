@@ -54,7 +54,6 @@ public class Interval {
 	}
 
 	BigDecimal getCenterPoint() {
-
 		return lower.add(upper).divide(new BigDecimal(2.0), precision, BigDecimal.ROUND_HALF_UP);
 	}
 
@@ -84,8 +83,8 @@ public class Interval {
 	}
 
 	Interval add(Interval other) {
-		final BigDecimal lower = this.lower.add(other.lower);
-		final BigDecimal higher = this.upper.add(other.upper);
+		final BigDecimal lower = this.lower.add(other.lower).setScale(precision, BigDecimal.ROUND_FLOOR);
+		final BigDecimal higher = this.upper.add(other.upper).setScale(precision, BigDecimal.ROUND_CEILING);
 		return new Interval(lower, higher, precision);
 	}
 
@@ -103,9 +102,9 @@ public class Interval {
 
 	Interval multiplyByValue(BigDecimal value) {
 		final BigDecimal lowerValue = value
-				.setScale(precision, BigDecimal.ROUND_DOWN);
+				.setScale(precision, BigDecimal.ROUND_FLOOR);
 		final BigDecimal higherValue = value
-				.setScale(precision, BigDecimal.ROUND_UP);
+				.setScale(precision, BigDecimal.ROUND_CEILING);
 
 		final BigDecimal lowerLower = lower.multiply(lowerValue);
 		final BigDecimal lowerHigher = lower.multiply(higherValue);

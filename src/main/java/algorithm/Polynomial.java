@@ -32,7 +32,11 @@ class Polynomial {
 		for (Element element : elements) {
 			final Interval factor = element.getFactor();
 			final BigDecimal pow = value.pow(element.getExponent());
-			result = result.add(factor.multiplyByValue(pow)); //sum += aixi^i
+			final BigDecimal powUpper = pow.setScale(precision, BigDecimal.ROUND_CEILING);
+			final BigDecimal powLower = pow.setScale(precision, BigDecimal.ROUND_FLOOR);
+			final Interval toAddLower = factor.multiplyByValue(powLower);
+			final Interval toAddUpper = factor.multiplyByValue(powUpper);
+			result = result.add(toAddLower.sum(toAddUpper)); //sum += aixi^i
 		}
 		return result;
 	}
