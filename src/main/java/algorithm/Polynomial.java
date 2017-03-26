@@ -20,7 +20,14 @@ class Polynomial {
 		this.elements = elements;
 	}
 
-	public Interval countForValue(BigDecimal value, int precision) {
+	/**
+	 * Counts value of the polynomial for given argument
+	 *
+	 * @param value     given argument
+	 * @param precision precision of computations
+	 * @return scope of values for given argument
+	 */
+	Interval countForValue(BigDecimal value, int precision) {
 		Interval result = new Interval(BigDecimal.ZERO, precision);
 		for (Element element : elements) {
 			final Interval factor = element.getFactor();
@@ -30,7 +37,15 @@ class Polynomial {
 		return result;
 	}
 
-	public boolean canBeComputedWith(Interval interval, int precision) {
+	/**
+	 * Checks, if a product of computations for given scope's borders is negative - that means there is zero point
+	 * between them.
+	 *
+	 * @param interval  Given to computations interval - scope
+	 * @param precision decimal precision of computation
+	 * @return if computations can be made for given interval
+	 */
+	boolean canBeComputedWith(Interval interval, int precision) {
 		final Interval lowerValue = countForValue(interval.getLower(), precision);
 		final Interval higherValue = countForValue(interval.getUpper(), precision);
 		return lowerValue
@@ -39,7 +54,14 @@ class Polynomial {
 				.compareTo(BigDecimal.ZERO) < 0;
 	}
 
-	public Interval countForInterval(Interval interval, int precision) {
+	/**
+	 * Counts result of polynomial for given as interval argument
+	 *
+	 * @param interval  given scope
+	 * @param precision decimal precision of computations
+	 * @return calculation results for values at the edges of compartment
+	 */
+	Interval countForInterval(Interval interval, int precision) {
 		final Interval lowerResult = countForValue(interval.getLower(), precision);
 		final Interval higherResult = countForValue(interval.getUpper(), precision);
 		return lowerResult.sum(higherResult);
@@ -60,10 +82,10 @@ class Polynomial {
 
 	@Override
 	public String toString() {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		for (Element element : elements) {
-			result += element + " ";
+			result.append(element).append(" ");
 		}
-		return result;
+		return result.toString();
 	}
 }

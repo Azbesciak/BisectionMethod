@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 
 
 public class MainController implements Initializable {
-
-	Logger logger = Logger.getLogger(this.getClass().getName());
 	@FXML
 	private Button startButton;
 	@FXML
@@ -47,9 +45,12 @@ public class MainController implements Initializable {
 	@FXML
 	private TextField precisionInput;
 
+	/**
+	 * Prepares main view, makes regex for inputs, maintains launch button disability and on click action.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		Arrays.asList( lowerBoundInput, upperBoundInput).forEach(
+		Arrays.asList(lowerBoundInput, upperBoundInput).forEach(
 				textField -> textField.textProperty().addListener(((observable, oldValue, newValue) -> textField
 						.setText(newValue.matches(Constants.TOTAL_NUMBER_VARIABLE_REGEX) ? newValue : oldValue))));
 
@@ -71,6 +72,7 @@ public class MainController implements Initializable {
 						.or(upperBoundInput.textProperty().lessThan(lowerBoundInput.textProperty()))
 						.or(precisionInput.textProperty().isEmpty())
 		);
+
 		startButton.setOnAction(event -> {
 			final String polynomial = preparePolynomialForAlgorithm(polynomialInput.getText());
 			final String lowerBound = lowerBoundInput.getText().replace(",", ".");
@@ -95,13 +97,27 @@ public class MainController implements Initializable {
 		});
 	}
 
+	/**
+	 * Prepares polynomial to parsable by launcher form
+	 *
+	 * @param polynomial given from input polynomial
+	 * @return computable polynomial
+	 */
 	private String preparePolynomialForAlgorithm(String polynomial) {
 		return polynomial.replace(",", ".").replaceAll("\\s+", "")
-				.replaceAll("((?![eE])[a-zA-Z])(\\s*([^\\^\\s]|$))", "$1^1$3")	//if variable hasn't exponent, it is
-				// added
-																			// with 0 power.
+				//if variable hasn't exponent, it is added with 0 power.
+				.replaceAll("((?![eE])[a-zA-Z])(\\s*([^\\^\\s]|$))", "$1^1$3")
 				.replaceAll("([^eE])([+-])", "$1 $2"); //adding spaces before +/- signs except those after exponent
 	}
+
+	/**
+	 * Shows modal window containing result of algorithm
+	 *
+	 * @param result info which contains result scope, the narrowest interval of arguments, where root can be found,
+	 *               and the reason of algorithm's computations end.
+	 * @param event  Event needed to initialize window - gets rootStage
+	 * @throws IOException if result-window.fxml contains errors or wasn't found in resources/controller folder
+	 */
 	@FXML
 	private void showResultCustomWindow(Result result, ActionEvent event) throws IOException {
 		Stage stage = new Stage();
@@ -113,11 +129,16 @@ public class MainController implements Initializable {
 		stage.getIcons().add(new Image("./stack-overflow.png"));
 		stage.setTitle("Result");
 		stage.setScene(scene);
-		stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+		stage.initOwner(((Node) event.getSource()).getScene().getWindow());
 		stage.setResizable(false);
 		stage.show();
 	}
 
+	/**
+	 * shows standard javaFX alert if custom will fail
+	 *
+	 * @param solution result of computations
+	 */
 	private void showAlertResultDialog(Result solution) {
 		Alert resultAlert = new Alert(Alert.AlertType.INFORMATION);
 		resultAlert.setHeaderText("Result");
@@ -129,6 +150,11 @@ public class MainController implements Initializable {
 		resultAlert.show();
 	}
 
+	/**
+	 * Informs about exceptions in algorithm
+	 *
+	 * @param e An exception that occurred
+	 */
 	private void showExceptionAlert(Throwable e) {
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Error");

@@ -9,7 +9,7 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ResultController implements Initializable {
+public class ResultController {
 
 	@FXML
 	private TextArea iterationsField;
@@ -20,11 +20,10 @@ public class ResultController implements Initializable {
 	@FXML
 	private TextArea reasonField;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-
-	}
-
+	/**
+	 * Prepares data for view filling out text fields.
+	 * @param result received result
+	 */
 	public void setResult(Result result) {
 		iterationsField.setText(String.valueOf(result.getIteration()));
 		scopeField.setText(result.getScope().getIntervalWithDelta());
