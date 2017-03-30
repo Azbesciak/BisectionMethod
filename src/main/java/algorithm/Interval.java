@@ -13,11 +13,13 @@ public class Interval {
 	private final BigDecimal delta;
 	private final int precision;
 	private static NumberFormat formatter;
-
+	private final static  BigDecimal TWO = new BigDecimal("2");
 	static {
 		formatter = new DecimalFormat("0.#E0");
-		formatter.setMinimumFractionDigits(Constants.BASE_PRECISION);
-		formatter.setRoundingMode(RoundingMode.HALF_UP);
+//		formatter.setMinimumFractionDigits(Constants.BASE_PRECISION);
+//		formatter.setRoundingMode(RoundingMode.UNNECESSARY);
+//		formatter.setRoundingMode(RoundingMode.HALF_UP);
+		formatter.setMaximumFractionDigits(Constants.BASE_PRECISION);
 	}
 
 	Interval(String point, int precision) {
@@ -53,8 +55,13 @@ public class Interval {
 		return lower;
 	}
 
-	BigDecimal getCenterPoint() {
-		return lower.add(upper).divide(new BigDecimal(2.0), precision, BigDecimal.ROUND_HALF_UP);
+	Interval getCenterPoint() {
+
+		final BigDecimal sum = lower.add(upper);
+		final BigDecimal lowerBound = sum.divide(TWO, precision, BigDecimal.ROUND_FLOOR);
+		final BigDecimal upperBound = sum.divide(TWO, precision, BigDecimal.ROUND_CEILING);
+
+		return new Interval(lowerBound, upperBound, precision);
 	}
 
 	private boolean isPoint() {
@@ -62,12 +69,12 @@ public class Interval {
 	}
 
 	Interval findSubInterval(Polynomial polynomial) {
-		final BigDecimal centerPoint = getCenterPoint();
-		final Interval lowerInterval = new Interval(lower, centerPoint, precision);
+		final Interval centerPoint = getCenterPoint();
+		final Interval lowerInterval = new Interval(lower, centerPoint.getUpper(), precision);
 		if (polynomial.canBeComputedWith(lowerInterval, precision)) {
 			return lowerInterval;
 		} else {
-			return new Interval(centerPoint, upper, precision);
+			return new Interval(centerPoint.getLower(), upper, precision);
 		}
 	}
 

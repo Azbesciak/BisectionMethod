@@ -18,13 +18,20 @@ public class Result {
 	}
 
 	private final int iteration;
+
+	public Polynomial getPolynomial() {
+		return polynomial;
+	}
+
+	private final Polynomial polynomial;
 	private final Interval result;
 	private final Interval scope;
 	private final String reason;
 	static final String REASON_NARROW_SCOPE = "narrow enough interval";
 	static final String REASON_POINT = "good enough point";
 	static final String REASON_EXCEEDED_ITERATIONS = "exceeded allowed iterations number";
-	public Result(int iteration, Interval result, Interval scope, String reason) {
+	public Result(Polynomial polynomial, int iteration, Interval result, Interval scope, String reason) {
+		this.polynomial = polynomial;
 		this.iteration = iteration;
 		this.result = result;
 		this.scope = scope;

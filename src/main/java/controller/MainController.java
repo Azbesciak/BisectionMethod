@@ -3,6 +3,8 @@ package controller;
 import algorithm.Constants;
 import algorithm.Launcher;
 import algorithm.Result;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.text.Text;
@@ -24,7 +25,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
+
+import static algorithm.Constants.POLYNOMIAL_TEST_REGEX;
 
 
 public class MainController implements Initializable {
@@ -45,11 +48,20 @@ public class MainController implements Initializable {
 	@FXML
 	private TextField precisionInput;
 
+	private BooleanBinding matchesRegex(final TextField field, final Pattern pattern) {
+
+		return Bindings.createBooleanBinding(
+				() -> pattern.matcher(field.getText()).matches(), field.textProperty()
+		);
+
+	}
+
 	/**
 	 * Prepares main view, makes regex for inputs, maintains launch button disability and on click action.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		Pattern polynomialPattern = Pattern.compile(POLYNOMIAL_TEST_REGEX);
 		Arrays.asList(lowerBoundInput, upperBoundInput).forEach(
 				textField -> textField.textProperty().addListener(((observable, oldValue, newValue) -> textField
 						.setText(newValue.matches(Constants.TOTAL_NUMBER_VARIABLE_REGEX) ? newValue : oldValue))));
@@ -64,6 +76,7 @@ public class MainController implements Initializable {
 
 		startButton.disableProperty().bind(
 				polynomialInput.textProperty().isEmpty()
+						.or(matchesRegex(polynomialInput, polynomialPattern).not())
 						.or(upperBoundInput.textProperty().isEmpty())
 						.or(lowerBoundInput.textProperty().isEmpty())
 						.or(scopeEpsilonInput.textProperty().isEmpty())

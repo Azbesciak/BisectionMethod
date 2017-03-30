@@ -7,12 +7,14 @@ class Bisection {
 	private final BigDecimal scopeEpsilon;
 	private final BigDecimal resultEpsilon;
 	private final int precision;
+	private final int computationPrecision;
 
 	Bisection(Polynomial polynomial, BigDecimal scopeEpsilon, BigDecimal resultEpsilon) {
 		this.polynomial = polynomial;
 		this.scopeEpsilon = scopeEpsilon;
 		this.resultEpsilon = resultEpsilon;
 		this.precision = Constants.BASE_PRECISION;
+		this.computationPrecision = this.precision + Constants.ADDITIONAL_PRECISION;
 	}
 
 	/**
@@ -28,6 +30,7 @@ class Bisection {
 		this.scopeEpsilon = scopeEpsilon;
 		this.resultEpsilon = resultEpsilon;
 		this.precision = precision != null ? precision : Constants.BASE_PRECISION;
+		this.computationPrecision = this.precision + Constants.ADDITIONAL_PRECISION;
 	}
 
 	/**
@@ -58,21 +61,21 @@ class Bisection {
 	 */
 	private Result findZero(Interval scope, int iteration, Integer allowedIterations) {
 		if (allowedIterations != null && iteration >= allowedIterations) {
-			final Interval solution = polynomial.countForInterval(scope, precision);
-			return new Result(iteration, solution, scope, Result.REASON_EXCEEDED_ITERATIONS);
-		} else if (!polynomial.canBeComputedWith(scope, precision)) {
+			final Interval solution = polynomial.countForInterval(scope, computationPrecision);
+			return new Result(polynomial, iteration, solution, scope, Result.REASON_EXCEEDED_ITERATIONS);
+		} else if (!polynomial.canBeComputedWith(scope, computationPrecision)) {
 			throw new RuntimeException(
 					polynomial + " cannot be computed with interval " + scope + " at iteration " + iteration);
 		} else {
 			iteration++;
 			if (scope.isNarrowerThan(scopeEpsilon)) {
-				final Interval solution = polynomial.countForInterval(scope, precision);
-				return new Result(iteration, solution, scope, Result.REASON_NARROW_SCOPE);
+				final Interval solution = polynomial.countForInterval(scope, computationPrecision);
+				return new Result(polynomial, iteration, solution, scope, Result.REASON_NARROW_SCOPE);
 			} else {
-				final BigDecimal centerPoint = scope.getCenterPoint();
-				final Interval result = polynomial.countForValue(centerPoint, precision);
+				final Interval centerPoint = scope.getCenterPoint();
+				final Interval result = polynomial.countForInterval(centerPoint, computationPrecision);
 				if (result.isLowerOrEqualValueWithAbs(resultEpsilon)) {
-					return new Result(iteration, result, new Interval(centerPoint, precision), Result.REASON_POINT);
+					return new Result(polynomial, iteration, result, centerPoint, Result.REASON_POINT);
 				} else {
 					final Interval subInterval = scope.findSubInterval(polynomial);
 					return findZero(subInterval, iteration, allowedIterations);

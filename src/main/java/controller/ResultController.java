@@ -19,6 +19,8 @@ public class ResultController {
 	private TextArea resultField;
 	@FXML
 	private TextArea reasonField;
+	@FXML
+	private TextArea polynomialField;
 
 	/**
 	 * Prepares data for view filling out text fields.
@@ -29,5 +31,6 @@ public class ResultController {
 		scopeField.setText(result.getScope().getIntervalWithDelta());
 		resultField.setText(result.getResult().getIntervalWithDelta());
 		reasonField.setText(result.getReason());
+		polynomialField.setText(String.valueOf(result.getPolynomial()));
 	}
 }
