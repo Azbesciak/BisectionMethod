@@ -4,11 +4,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.kframework.mpfr.BigFloat;
+import org.kframework.mpfr.BinaryMathContext;
 
 public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		new BigFloat("1", BinaryMathContext.BINARY64);
 		Parent root = FXMLLoader.load(getClass().getResource("main-window.fxml"));
 		primaryStage.getIcons().add(new Image("./stack-overflow.png"));
 		primaryStage.setTitle("Bisection Method");

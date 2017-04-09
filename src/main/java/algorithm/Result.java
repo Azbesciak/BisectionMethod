@@ -1,15 +1,18 @@
 package algorithm;
 
-public class Result {
+import algorithm.abstracts.Polynomial;
+import algorithm.abstracts.interfaces.Compartmental;
+
+public class Result<V extends Number & Comparable<V>, E extends Number & Comparable<E>> {
 	public int getIteration() {
 		return iteration;
 	}
 
-	public Interval getResult() {
+	public Compartmental<V> getResult() {
 		return result;
 	}
 
-	public Interval getScope() {
+	public Compartmental<V> getScope() {
 		return scope;
 	}
 
@@ -23,14 +26,14 @@ public class Result {
 		return polynomial;
 	}
 
-	private final Polynomial polynomial;
-	private final Interval result;
-	private final Interval scope;
+	private final Polynomial<V, E> polynomial;
+	private final Compartmental<V> result;
+	private final Compartmental<V> scope;
 	private final String reason;
-	static final String REASON_NARROW_SCOPE = "narrow enough interval";
-	static final String REASON_POINT = "good enough point";
-	static final String REASON_EXCEEDED_ITERATIONS = "exceeded allowed iterations number";
-	public Result(Polynomial polynomial, int iteration, Interval result, Interval scope, String reason) {
+	public static final String REASON_NARROW_SCOPE = "narrow enough interval";
+	public static final String REASON_POINT = "good enough point";
+	public static final String REASON_EXCEEDED_ITERATIONS = "exceeded allowed iterations number";
+	public Result(Polynomial<V, E> polynomial, int iteration, Compartmental<V> result, Compartmental<V> scope, String reason) {
 		this.polynomial = polynomial;
 		this.iteration = iteration;
 		this.result = result;
@@ -43,7 +46,7 @@ public class Result {
 		return "Result at " +
 				"iteration " + iteration +
 				"\nresult : " + result +
-				"\nscope  :  " + scope +
+				"\nscope  : " + scope +
 				"\nreason : " + reason;
 	}
 }

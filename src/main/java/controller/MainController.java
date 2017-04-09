@@ -1,8 +1,6 @@
 package controller;
 
-import algorithm.Constants;
-import algorithm.Launcher;
-import algorithm.Result;
+import algorithm.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
@@ -14,8 +12,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,6 +32,8 @@ import static algorithm.Constants.POLYNOMIAL_TEST_REGEX;
 
 public class MainController implements Initializable {
 	@FXML
+	public Pane precisionPane;
+	@FXML
 	private Button startButton;
 	@FXML
 	private TextField polynomialInput;
@@ -47,13 +49,14 @@ public class MainController implements Initializable {
 	private TextField iterationsInput;
 	@FXML
 	private TextField precisionInput;
+	@FXML
+	private ChoiceBox<Arithmetic> arithmeticChoice;
 
 	private BooleanBinding matchesRegex(final TextField field, final Pattern pattern) {
 
 		return Bindings.createBooleanBinding(
 				() -> pattern.matcher(field.getText()).matches(), field.textProperty()
 		);
-
 	}
 
 	/**
@@ -86,17 +89,17 @@ public class MainController implements Initializable {
 						.or(precisionInput.textProperty().isEmpty())
 		);
 
+		arithmeticChoice.setValue(Arithmetic.FLOATING);
+
+		precisionPane.visibleProperty().bind(Bindings.createBooleanBinding(
+		        () -> Arithmetic.EXTENDED.equals(arithmeticChoice.getValue()), arithmeticChoice.valueProperty())
+        );
+
+
 		startButton.setOnAction(event -> {
-			final String polynomial = preparePolynomialForAlgorithm(polynomialInput.getText());
-			final String lowerBound = lowerBoundInput.getText().replace(",", ".");
-			final String upperBound = upperBoundInput.getText().replace(",", ".");
-			final String scopeEpsilon = scopeEpsilonInput.getText().replace(",", ".");
-			final String resultEpsilon = resultEpsilonInput.getText().replace(",", ".");
-			final String iterations = iterationsInput.getText();
-			final String precision = precisionInput.getText();
+			Params params = Params.parse(this);
 			try {
-				final Result solution = Launcher.launch(polynomial, resultEpsilon, scopeEpsilon, lowerBound,
-														upperBound, iterations, precision);
+				final Result solution = Launcher.launch(params);
 				try {
 					showResultCustomWindow(solution, event);
 				} catch (IOException e) {
@@ -110,18 +113,7 @@ public class MainController implements Initializable {
 		});
 	}
 
-	/**
-	 * Prepares polynomial to parsable by launcher form
-	 *
-	 * @param polynomial given from input polynomial
-	 * @return computable polynomial
-	 */
-	private String preparePolynomialForAlgorithm(String polynomial) {
-		return polynomial.replace(",", ".").replaceAll("\\s+", "")
-				//if variable hasn't exponent, it is added with 0 power.
-				.replaceAll("((?![eE])[a-zA-Z])(\\s*([^\\^\\s]|$))", "$1^1$3")
-				.replaceAll("([^eE])([+-])", "$1 $2"); //adding spaces before +/- signs except those after exponent
-	}
+
 
 	/**
 	 * Shows modal window containing result of algorithm
@@ -176,5 +168,41 @@ public class MainController implements Initializable {
 				e.getMessage() : Arrays.toString(e.getStackTrace());
 		alert.setContentText(message);
 		alert.showAndWait();
+	}
+
+	public Button getStartButton() {
+		return startButton;
+	}
+
+	public TextField getPolynomialInput() {
+		return polynomialInput;
+	}
+
+	public TextField getUpperBoundInput() {
+		return upperBoundInput;
+	}
+
+	public TextField getLowerBoundInput() {
+		return lowerBoundInput;
+	}
+
+	public TextField getScopeEpsilonInput() {
+		return scopeEpsilonInput;
+	}
+
+	public TextField getResultEpsilonInput() {
+		return resultEpsilonInput;
+	}
+
+	public TextField getIterationsInput() {
+		return iterationsInput;
+	}
+
+	public TextField getPrecisionInput() {
+		return precisionInput;
+	}
+
+	public ChoiceBox<Arithmetic> getArithmeticChoice() {
+		return arithmeticChoice;
 	}
 }

@@ -1,20 +1,14 @@
-package algorithm;
+package algorithm.decimal;
+
+import algorithm.abstracts.Element;
+import algorithm.abstracts.interfaces.Compartmental;
 
 import java.math.BigDecimal;
 
-class Element {
-
-	private final static int SINGLE_VARIABLE = 0;
-	private final static int JUST_VALUE = 1;
-	private final static int VALUE_WITH_POWER = 2;
-	private final static int INTERVAL_AS_VALUE = 3;
-	private final static int INTERVAL_WITH_EXPONENT = 4;
-
-	private Interval factor;
-	private Integer exponent;
-	private String stringify;
+class DecimalElement extends Element<BigDecimal, Integer>{
 	private int precision;
-	Element(String[] array, int precision) {
+
+	DecimalElement(String[] array, int precision) {
 		this.precision = precision;
 		switch(array.length) {
 
@@ -34,14 +28,14 @@ class Element {
 			default: break;
 		}
 		if (factor == null) {
-			factor = new Interval(BigDecimal.ONE, precision);
+			factor = new DecimalInterval(BigDecimal.ONE, precision);
 		}
 		if (exponent == null) {
 			exponent = 0;
 		}
 	}
 
-	private void prepareSingleValueElement(String value) {
+	protected void prepareSingleValueElement(String value) {
 		String factor = value;
 		if ("+".equals(factor) || "".equals(factor)) {
 			factor = "1";
@@ -49,16 +43,14 @@ class Element {
 			factor = "-1";
 		}
 		final BigDecimal temp = new BigDecimal(factor);
-		final BigDecimal lower = temp.setScale(precision, BigDecimal.ROUND_DOWN);
-		final BigDecimal upper = temp.setScale(precision, BigDecimal.ROUND_UP);
-		this.factor = new Interval(lower.min(upper),
-								   upper.max(lower),
-								   precision);
+		final BigDecimal lower = temp.setScale(precision, BigDecimal.ROUND_FLOOR);
+		final BigDecimal upper = temp.setScale(precision, BigDecimal.ROUND_CEILING);
+		this.factor = new DecimalInterval(lower, upper, precision);
 	}
 
-	private void prepareIntervalElement(String [] array) {
-		final Interval interval = new Interval(array[1], array[2], precision);
-		factor = "-".equals(array[0]) ? interval.negate() : interval;
+	protected void prepareIntervalElement(String [] array) {
+		final DecimalInterval decimalInterval = new DecimalInterval(array[1], array[2], precision);
+		factor = "-".equals(array[0]) ? decimalInterval.negate() : decimalInterval;
 	}
 
 	public void multiplyBySign(String sign) {
@@ -87,11 +79,11 @@ class Element {
 		return result;
 	}
 
-	public Interval getFactor() {
+	public Compartmental<BigDecimal> getFactor() {
 		return factor;
 	}
 
-	public void setFactor(Interval factor) {
+	public void setFactor(Compartmental<BigDecimal> factor) {
 		this.factor = factor;
 	}
 
@@ -101,6 +93,10 @@ class Element {
 
 	public void setExponent(Integer exponent) {
 		this.exponent = exponent;
+	}
+
+	public int getPrecision() {
+		return precision;
 	}
 
 	@Override

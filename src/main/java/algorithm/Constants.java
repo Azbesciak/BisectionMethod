@@ -1,5 +1,9 @@
 package algorithm;
 
+import org.kframework.mpfr.BinaryMathContext;
+
+import java.math.RoundingMode;
+
 public class Constants {
 	public final static int BASE_PRECISION = 16;
 	public final static int ADDITIONAL_PRECISION = 16;
@@ -21,4 +25,6 @@ public class Constants {
 			"(" + SIGNS_REGEX  + INTERVAL_REGEX + "|" + DECIMAL_VALUE_REGEX + ")";
 	public static final String POLYNOMIAL_TEST_REGEX = "(" + INTERVAL_OR_VALUE_REGEX + VARIABLE_REGEX + "|" +
 			SIGNS_REGEX + VARIABLE_REGEX + "|" + INTERVAL_OR_VALUE_REGEX + ")+";
+
+	public static final String TYPE_FLOATING_ARITHMETIC = "Floating-point";
 }
