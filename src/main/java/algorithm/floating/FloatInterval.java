@@ -27,6 +27,8 @@ class FloatInterval extends Interval<BigFloat> {
     FloatInterval(BigFloat lower, BigFloat upper) {
         if (lower.greaterThan(upper))
             throw new RuntimeException("Lower bound cannot be upper than upper");
+        this.lower = lower;
+        this.upper = upper;
         this.delta = upper.subtract(lower, BinaryMathContext.BINARY64);
     }
 

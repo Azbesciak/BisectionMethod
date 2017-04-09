@@ -44,10 +44,7 @@ class FloatElement extends Element<BigFloat, BigFloat> {
         final BigFloat lower = new BigFloat(factor, ROUND_FLOOR_64X);
         final BigFloat upper = new BigFloat(factor, ROUND_CEIL_64X);
 
-        this.factor = new FloatInterval(
-                BigFloat.min(lower, upper, BinaryMathContext.BINARY64),
-                BigFloat.max(lower, upper, BinaryMathContext.BINARY64)
-        );
+        this.factor = new FloatInterval(lower, upper);
     }
 
     protected void prepareIntervalElement(String[] array) {
