@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.utils;
 
 import org.kframework.mpfr.BinaryMathContext;
 

@@ -1,7 +1,7 @@
 package algorithm.types;
 
-import algorithm.Arithmetic;
-import algorithm.Params;
+import algorithm.utils.Arithmetic;
+import algorithm.utils.Params;
 import algorithm.abstracts.interfaces.WrapperBuilder;
 import algorithm.types.decimal.DecimalBuilder;
 import algorithm.types.floating.FloatBuilder;

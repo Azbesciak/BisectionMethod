@@ -1,7 +1,9 @@
 package controller;
 
 import algorithm.*;
-import algorithm.Arithmetic;
+import algorithm.utils.Arithmetic;
+import algorithm.utils.Constants;
+import algorithm.utils.Params;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
@@ -28,7 +30,7 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 
-import static algorithm.Constants.POLYNOMIAL_TEST_REGEX;
+import static algorithm.utils.Constants.POLYNOMIAL_TEST_REGEX;
 
 
 public class MainController implements Initializable {

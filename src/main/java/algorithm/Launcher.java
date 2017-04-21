@@ -6,6 +6,7 @@ import algorithm.types.WrapperBuilderFactory;
 import algorithm.logic.Bisection;
 import algorithm.logic.Interval;
 import algorithm.logic.Polynomial;
+import algorithm.utils.Params;
 
 /**
  * Integration layer controller and logic - prepares data to computations

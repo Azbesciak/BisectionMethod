@@ -1,6 +1,6 @@
 package algorithm.logic;
 
-import algorithm.Constants;
+import algorithm.utils.Constants;
 import algorithm.abstracts.NumberWrapper;
 import algorithm.abstracts.interfaces.WrapperBuilder;
 import algorithm.abstracts.interfaces.Computable;

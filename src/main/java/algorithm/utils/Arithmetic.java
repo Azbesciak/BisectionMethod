@@ -1,4 +1,4 @@
-package algorithm;
+package algorithm.utils;
 
 public enum Arithmetic {
     FLOATING("Floating-point"),

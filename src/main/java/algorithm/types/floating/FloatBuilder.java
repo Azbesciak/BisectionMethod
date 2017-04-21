@@ -1,6 +1,6 @@
 package algorithm.types.floating;
 
-import algorithm.Params;
+import algorithm.utils.Params;
 import algorithm.abstracts.NumberWrapper;
 import algorithm.abstracts.interfaces.WrapperBuilder;
 import org.kframework.mpfr.BigFloat;
