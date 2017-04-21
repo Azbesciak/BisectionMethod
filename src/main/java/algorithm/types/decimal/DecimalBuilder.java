@@ -1,8 +1,8 @@
-package algorithm.decimal;
+package algorithm.types.decimal;
 
 import algorithm.Params;
 import algorithm.abstracts.NumberWrapper;
-import algorithm.abstracts.WrapperBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilder;
 
 import java.math.BigDecimal;
 

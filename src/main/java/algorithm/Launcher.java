@@ -1,8 +1,8 @@
 package algorithm;
 
 import algorithm.abstracts.NumberWrapper;
-import algorithm.abstracts.WrapperBuilder;
-import algorithm.abstracts.interfaces.WrapperBuilderFactory;
+import algorithm.abstracts.interfaces.WrapperBuilder;
+import algorithm.types.WrapperBuilderFactory;
 import algorithm.logic.Bisection;
 import algorithm.logic.Interval;
 import algorithm.logic.Polynomial;

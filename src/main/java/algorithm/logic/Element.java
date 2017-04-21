@@ -2,7 +2,7 @@ package algorithm.logic;
 
 
 import algorithm.abstracts.NumberWrapper;
-import algorithm.abstracts.WrapperBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilder;
 
 public class Element<V extends Number & Comparable<V>> {
     protected final static int SINGLE_VARIABLE = 0;

@@ -1,10 +1,10 @@
-package algorithm.abstracts.interfaces;
+package algorithm.types;
 
 import algorithm.Arithmetic;
 import algorithm.Params;
-import algorithm.abstracts.WrapperBuilder;
-import algorithm.decimal.DecimalBuilder;
-import algorithm.floating.FloatBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilder;
+import algorithm.types.decimal.DecimalBuilder;
+import algorithm.types.floating.FloatBuilder;
 
 
 public class WrapperBuilderFactory {

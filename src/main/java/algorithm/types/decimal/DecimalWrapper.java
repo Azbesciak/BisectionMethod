@@ -1,4 +1,4 @@
-package algorithm.decimal;
+package algorithm.types.decimal;
 
 import algorithm.abstracts.NumberWrapper;
 

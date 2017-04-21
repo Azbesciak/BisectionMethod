@@ -1,8 +1,8 @@
-package algorithm.floating;
+package algorithm.types.floating;
 
 import algorithm.Params;
 import algorithm.abstracts.NumberWrapper;
-import algorithm.abstracts.WrapperBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilder;
 import org.kframework.mpfr.BigFloat;
 import org.kframework.mpfr.BinaryMathContext;
 

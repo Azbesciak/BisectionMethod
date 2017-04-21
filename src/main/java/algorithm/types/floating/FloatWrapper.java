@@ -1,4 +1,4 @@
-package algorithm.floating;
+package algorithm.types.floating;
 
 import algorithm.abstracts.NumberWrapper;
 import org.kframework.mpfr.BigFloat;

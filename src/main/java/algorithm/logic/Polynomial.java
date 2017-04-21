@@ -2,7 +2,7 @@ package algorithm.logic;
 
 import algorithm.Constants;
 import algorithm.abstracts.NumberWrapper;
-import algorithm.abstracts.WrapperBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilder;
 import algorithm.abstracts.interfaces.Computable;
 
 import java.util.List;
