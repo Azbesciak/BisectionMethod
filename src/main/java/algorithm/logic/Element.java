@@ -4,12 +4,12 @@ package algorithm.logic;
 import algorithm.abstracts.NumberWrapper;
 import algorithm.abstracts.interfaces.WrapperBuilder;
 
-public class Element<V extends Number & Comparable<V>> {
-    protected final static int SINGLE_VARIABLE = 0;
-    protected final static int JUST_VALUE = 1;
-    protected final static int VALUE_WITH_POWER = 2;
-    protected final static int INTERVAL_AS_VALUE = 3;
-    protected final static int INTERVAL_WITH_EXPONENT = 4;
+class Element<V extends Number & Comparable<V>> {
+    private final static int SINGLE_VARIABLE = 0;
+    private  final static int JUST_VALUE = 1;
+    private final static int VALUE_WITH_POWER = 2;
+    private final static int INTERVAL_AS_VALUE = 3;
+    private final static int INTERVAL_WITH_EXPONENT = 4;
 
     private Interval<V> factor;
     private String exponent;
