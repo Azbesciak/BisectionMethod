@@ -1,7 +1,11 @@
 package algorithm;
 
-import algorithm.decimal.DecimalFactory;
-import algorithm.floating.FloatFactory;
+import algorithm.abstracts.NumberWrapper;
+import algorithm.abstracts.WrapperBuilder;
+import algorithm.abstracts.interfaces.WrapperBuilderFactory;
+import algorithm.logic.Bisection;
+import algorithm.logic.Interval;
+import algorithm.logic.Polynomial;
 
 /**
  * Integration layer controller and logic - prepares data to computations
@@ -13,14 +17,18 @@ public class Launcher {
 
 	 */
 	public static Result launch(Params params) {
-        switch (params.getArithmetic()) {
-            case EXTENDED: {
-                return new DecimalFactory().prepareResult(params);
-            }
-            case FLOATING:
-            default: {
-                return new FloatFactory().prepareResult(params);
-            }
-        }
+        final WrapperBuilder builder = WrapperBuilderFactory.getWrapper(params);
+        return prepareResult(params, builder);
 	}
+
+	private static <V extends Number & Comparable<V>> Result<V> prepareResult(Params params, WrapperBuilder builder) {
+        final NumberWrapper<V> resultEpsilon = builder.getWrapper(params.getResultEpsilon());
+        final NumberWrapper<V> scopeEpsilon = builder.getWrapper(params.getScopeEpsilon());
+        final Polynomial<V> polynomial = new Polynomial<>(params.getPolynomial(), builder);
+        final Bisection<V> bisection = new Bisection<>(polynomial, scopeEpsilon, resultEpsilon);
+        final String lowerBound = params.getLowerBound();
+        final String upperBound = params.getUpperBound();
+        final String iterations = params.getIterations();
+        return bisection.findZero(new Interval<>(builder.getWrapper(lowerBound), builder.getWrapper(upperBound)), Integer.valueOf(iterations));
+    }
 }

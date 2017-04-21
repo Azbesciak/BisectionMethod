@@ -1,12 +1,12 @@
-package algorithm;
+package algorithm.logic;
 
-import algorithm.abstracts.Polynomial;
-import algorithm.abstracts.interfaces.Compartmental;
+import algorithm.Result;
+import algorithm.abstracts.NumberWrapper;
 
-public class Bisection<V extends Number & Comparable<V>, E extends Number & Comparable<E>> {
-    private final Polynomial<V, E> polynomial;
-    private final V scopeEpsilon;
-    private final V resultEpsilon;
+public class Bisection<V extends Number & Comparable<V>> {
+    private final Polynomial<V> polynomial;
+    private final NumberWrapper<V> scopeEpsilon;
+    private final NumberWrapper<V> resultEpsilon;
 
     /**
      * Makes instance of bisection method producer - takes constant parameters.
@@ -15,7 +15,7 @@ public class Bisection<V extends Number & Comparable<V>, E extends Number & Comp
      * @param scopeEpsilon  epsilon of arguments compartment
      * @param resultEpsilon epsilon of acceptable result
      */
-    public Bisection(Polynomial<V, E> polynomial, V scopeEpsilon, V resultEpsilon) {
+    public Bisection(Polynomial<V> polynomial, NumberWrapper<V> scopeEpsilon, NumberWrapper<V> resultEpsilon) {
         this.polynomial = polynomial;
         this.scopeEpsilon = scopeEpsilon;
         this.resultEpsilon = resultEpsilon;
@@ -35,7 +35,7 @@ public class Bisection<V extends Number & Comparable<V>, E extends Number & Comp
      * @return scope of arguments where polynomial's root can be found with given epsilon or the best reached in
      * given iterations.
      */
-    public Result<V, E> findZero(Compartmental<V> scope, Integer allowedIterations) {
+    public Result<V> findZero(Interval<V> scope, Integer allowedIterations) {
         if (allowedIterations != null && allowedIterations < 1) {
             throw new RuntimeException(
                     "Allowed iterations less than one");
@@ -46,11 +46,11 @@ public class Bisection<V extends Number & Comparable<V>, E extends Number & Comp
                         polynomial + " cannot be computed with interval " + scope + " at iteration " + iteration);
             } else {
                 if (scope.isNarrowerThan(scopeEpsilon)) {
-                    final Compartmental<V> solution = polynomial.countForInterval(scope);
+                    final Interval<V> solution = polynomial.countForInterval(scope);
                     return new Result<>(polynomial, iteration, solution, scope, Result.REASON_NARROW_SCOPE);
                 } else {
-                    final Compartmental<V> centerPoint = scope.getCenterPoint();
-                    final Compartmental<V> result = polynomial.countForInterval(centerPoint);
+                    final Interval<V> centerPoint = scope.getCenterPoint();
+                    final Interval<V> result = polynomial.countForInterval(centerPoint);
                     if (result.isLowerOrEqualValueWithAbs(resultEpsilon)) {
                         return new Result<>(polynomial, iteration, result, centerPoint, Result.REASON_POINT);
                     } else {
@@ -59,7 +59,7 @@ public class Bisection<V extends Number & Comparable<V>, E extends Number & Comp
                 }
             }
         }
-        final Compartmental<V> solution = polynomial.countForInterval(scope);
+        final Interval<V> solution = polynomial.countForInterval(scope);
         return new Result<>(polynomial, allowedIterations, solution, scope, Result.REASON_EXCEEDED_ITERATIONS);
     }
 }

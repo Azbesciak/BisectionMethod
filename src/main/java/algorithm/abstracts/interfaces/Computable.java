@@ -1,7 +1,10 @@
 package algorithm.abstracts.interfaces;
 
-public interface Computable<T extends Number & Comparable> {
-    Compartmental<T> countForValue(T value);
-    boolean canBeComputedWith(Compartmental<T> compartmental);
-    Compartmental<T> countForInterval(Compartmental<T> compartmental);
+import algorithm.logic.Interval;
+import algorithm.abstracts.NumberWrapper;
+
+public interface Computable<T extends Number & Comparable<T>> {
+    Interval<T> countForValue(NumberWrapper<T> value);
+    boolean canBeComputedWith(Interval<T> interval);
+    Interval<T> countForInterval(Interval<T> interval);
 }

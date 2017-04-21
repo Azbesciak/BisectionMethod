@@ -5,8 +5,6 @@ import org.kframework.mpfr.BinaryMathContext;
 import java.math.RoundingMode;
 
 public class Constants {
-	public final static int BASE_PRECISION = 16;
-	public final static int ADDITIONAL_PRECISION = 16;
 	private static final String E_REGEX = "([eE]([+-])?)?\\d*";
 	public static final String NUMBER_VARIABLE_SPLIT_REGEX = "([^\\d+(,.\\d{1,2})?]+)";
 	public static final String ELEMENTS_SPLIT_REGEX = "[^\\d,\\.+\\-eE]+";

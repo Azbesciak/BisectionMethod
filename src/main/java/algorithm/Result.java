@@ -1,18 +1,18 @@
 package algorithm;
 
-import algorithm.abstracts.Polynomial;
-import algorithm.abstracts.interfaces.Compartmental;
+import algorithm.logic.Interval;
+import algorithm.logic.Polynomial;
 
-public class Result<V extends Number & Comparable<V>, E extends Number & Comparable<E>> {
+public class Result<V extends Number & Comparable<V>> {
 	public int getIteration() {
 		return iteration;
 	}
 
-	public Compartmental<V> getResult() {
+	public Interval<V> getResult() {
 		return result;
 	}
 
-	public Compartmental<V> getScope() {
+	public Interval<V> getScope() {
 		return scope;
 	}
 
@@ -26,14 +26,14 @@ public class Result<V extends Number & Comparable<V>, E extends Number & Compara
 		return polynomial;
 	}
 
-	private final Polynomial<V, E> polynomial;
-	private final Compartmental<V> result;
-	private final Compartmental<V> scope;
+	private final Polynomial<V> polynomial;
+	private final Interval<V> result;
+	private final Interval<V> scope;
 	private final String reason;
 	public static final String REASON_NARROW_SCOPE = "narrow enough interval";
 	public static final String REASON_POINT = "good enough point";
 	public static final String REASON_EXCEEDED_ITERATIONS = "exceeded allowed iterations number";
-	public Result(Polynomial<V, E> polynomial, int iteration, Compartmental<V> result, Compartmental<V> scope, String reason) {
+	public Result(Polynomial<V> polynomial, int iteration, Interval<V> result, Interval<V> scope, String reason) {
 		this.polynomial = polynomial;
 		this.iteration = iteration;
 		this.result = result;

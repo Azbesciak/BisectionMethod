@@ -1,6 +1,7 @@
 package controller;
 
 import algorithm.*;
+import algorithm.Arithmetic;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
