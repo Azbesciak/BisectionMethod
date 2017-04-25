@@ -1,8 +1,8 @@
 package algorithm.utils;
 
 public enum Arithmetic {
-    FLOATING("Floating-point"),
-    EXTENDED("Extended");
+    SIMPLE("Simple"),
+    INTERVAL("Interval");
 
     private String value;
     Arithmetic(String value) {

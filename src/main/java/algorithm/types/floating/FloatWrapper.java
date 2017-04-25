@@ -2,125 +2,122 @@ package algorithm.types.floating;
 
 import algorithm.abstracts.NumberWrapper;
 import org.kframework.mpfr.BigFloat;
-import org.kframework.mpfr.BinaryMathContext;
-
-import java.math.RoundingMode;
 
 class FloatWrapper extends NumberWrapper<BigFloat> {
 
-    private BinaryMathContext context;
+    private FloatParam param;
 
-    FloatWrapper(String value, BinaryMathContext context) {
-        super(new BigFloat(value, context));
-        this.context = context;
+    FloatWrapper(String value, FloatParam param) {
+        super(new BigFloat(value, param.context));
+        this.param = param;
     }
 
-    private FloatWrapper(BigFloat value, BinaryMathContext context) {
+    private FloatWrapper(BigFloat value, FloatParam param) {
         super(value);
-        this.context = context;
+        this.param = param;
     }
 
     @Override
     public NumberWrapper<BigFloat> addCeiling(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.add(wrapper.getValue(), getCeilingContext()), context);
+        return new FloatWrapper(value.add(wrapper.getValue(), param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> addFloor(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.add(wrapper.getValue(), getFloorContext()), context);
+        return new FloatWrapper(value.add(wrapper.getValue(), param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> minusFloor(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.subtract(wrapper.getValue(), getFloorContext()), context);
+        return new FloatWrapper(value.subtract(wrapper.getValue(), param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> minusCeiling(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.subtract(wrapper.getValue(), getCeilingContext()), context);
+        return new FloatWrapper(value.subtract(wrapper.getValue(), param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> minus(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.subtract(wrapper.getValue(), context), context);
+        return new FloatWrapper(value.subtract(wrapper.getValue(), param.direct()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> divideCeiling(String value) {
-        return divideCeiling(new FloatWrapper(value, context));
+        return divideCeiling(new FloatWrapper(value, param));
     }
 
     @Override
     public NumberWrapper<BigFloat> divideCeiling(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.divide(wrapper.getValue(), getCeilingContext()), context);
+        return new FloatWrapper(value.divide(wrapper.getValue(), param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> divideFloor(String value) {
-        return divideFloor(new FloatWrapper(value, context));
+        return divideFloor(new FloatWrapper(value, param));
     }
 
     @Override
     public NumberWrapper<BigFloat> divideFloor(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.divide(wrapper.getValue(), getFloorContext()), context);
+        return new FloatWrapper(value.divide(wrapper.getValue(), param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> multiplyFloor(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.multiply(wrapper.getValue(), getFloorContext()), context);
+        return new FloatWrapper(value.multiply(wrapper.getValue(), param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> multiplyCeiling(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(value.multiply(wrapper.getValue(), getCeilingContext()), context);
+        return new FloatWrapper(value.multiply(wrapper.getValue(), param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> abs() {
-        return new FloatWrapper(value.abs(), context);
+        return new FloatWrapper(value.abs(), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> ceil() {
-        return new FloatWrapper(value.round(getCeilingContext()), context);
+        return new FloatWrapper(value.round(param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> floor() {
-        return new FloatWrapper(value.round(getFloorContext()), context);
+        return new FloatWrapper(value.round(param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> powCeiling(String exponent) {
-        return powCeiling(new BigFloat(exponent, context));
+        return powCeiling(new BigFloat(exponent, param.ceiling()));
     }
 
     public NumberWrapper<BigFloat> powCeiling(BigFloat exponent) {
-        return new FloatWrapper(value.pow(exponent, getCeilingContext()), context);
+        return new FloatWrapper(value.pow(exponent, param.ceiling()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> powFloor(String exponent) {
-        return powFloor(new BigFloat(exponent, context));
+        return powFloor(new BigFloat(exponent, param.floor()));
     }
 
     public NumberWrapper<BigFloat> powFloor(BigFloat exponent) {
-        return new FloatWrapper(value.pow(exponent, getFloorContext()), context);
+        return new FloatWrapper(value.pow(exponent, param.floor()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> max(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(BigFloat.max(value, wrapper.getValue(), context), context);
+        return new FloatWrapper(BigFloat.max(value, wrapper.getValue(), param.direct()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> min(NumberWrapper<BigFloat> wrapper) {
-        return new FloatWrapper(BigFloat.min(value, wrapper.getValue(), context), context);
+        return new FloatWrapper(BigFloat.min(value, wrapper.getValue(), param.direct()), param);
     }
 
     @Override
     public NumberWrapper<BigFloat> negate() {
-        return new FloatWrapper(value.negate(), context);
+        return new FloatWrapper(value.negate(), param);
     }
 
     @Override
@@ -164,6 +161,26 @@ class FloatWrapper extends NumberWrapper<BigFloat> {
     }
 
     @Override
+    public String getFloorStringValue() {
+        return param.getFloorString(value);
+    }
+
+    @Override
+    public NumberWrapper<BigFloat> getFloorPrintableValue() {
+        return new FloatWrapper(param.getFloorPrintable(value), param);
+    }
+
+    @Override
+    public String getCeilingStringValue() {
+        return param.getCeilString(value);
+    }
+
+    @Override
+    public NumberWrapper<BigFloat> getCeilingPrintableValue() {
+        return new FloatWrapper(param.getCeilPrintable(value), param);
+    }
+
+    @Override
     public int compareTo(NumberWrapper<BigFloat> o) {
         return value.compareTo(o.getValue());
     }
@@ -188,11 +205,8 @@ class FloatWrapper extends NumberWrapper<BigFloat> {
         return value.doubleValue();
     }
 
-    private BinaryMathContext getCeilingContext() {
-        return context.withRoundingMode(RoundingMode.CEILING);
-    }
-
-    private BinaryMathContext getFloorContext() {
-        return context.withRoundingMode(RoundingMode.FLOOR);
+    @Override
+    public String toString() {
+        return param.getDirectString(value);
     }
 }

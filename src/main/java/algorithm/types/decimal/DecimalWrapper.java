@@ -208,4 +208,24 @@ class DecimalWrapper extends NumberWrapper<BigDecimal> {
     public boolean greaterThan(BigDecimal value) {
         return this.value.compareTo(value) > 0;
     }
+
+    @Override
+    public String getFloorStringValue() {
+        return value.toEngineeringString();
+    }
+
+    @Override
+    public NumberWrapper<BigDecimal> getFloorPrintableValue() {
+        return this;
+    }
+
+    @Override
+    public String getCeilingStringValue() {
+        return value.toEngineeringString();
+    }
+
+    @Override
+    public NumberWrapper<BigDecimal> getCeilingPrintableValue() {
+        return this;
+    }
 }

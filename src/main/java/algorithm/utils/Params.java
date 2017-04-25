@@ -23,6 +23,7 @@ public class Params {
     private String resultEpsilon;
     private String iterations;
     private String precision;
+    private NumberType numberType;
     private Arithmetic arithmetic;
 
     public static Params parse(MainController controller) {
@@ -34,6 +35,7 @@ public class Params {
         params.resultEpsilon = controller.getResultEpsilonInput().getText().replace(",", ".");
         params.iterations = controller.getIterationsInput().getText();
         params.precision = controller.getPrecisionInput().getText();
+        params.numberType = controller.getTypeChoice().getValue();
         params.arithmetic = controller.getArithmeticChoice().getValue();
         return params;
     }
@@ -77,6 +79,10 @@ public class Params {
 
     public String getPrecision() {
         return precision;
+    }
+
+    public NumberType getNumberType() {
+        return numberType;
     }
 
     public Arithmetic getArithmetic() {

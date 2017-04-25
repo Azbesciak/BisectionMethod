@@ -38,6 +38,11 @@ public abstract class NumberWrapper<V extends Number & Comparable<V>>
     public abstract boolean equalTo(V value);
     public abstract boolean greaterThan(NumberWrapper<V> wrapper);
     public abstract boolean greaterThan(V value);
+    public abstract String getFloorStringValue();
+    public abstract NumberWrapper<V> getFloorPrintableValue();
+    public abstract String getCeilingStringValue();
+    public abstract NumberWrapper<V> getCeilingPrintableValue();
+
 
     public V getValue() {
         return value;

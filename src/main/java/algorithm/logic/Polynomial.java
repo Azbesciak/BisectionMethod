@@ -88,8 +88,14 @@ public class Polynomial<V extends Number & Comparable<V>> implements Computable<
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
+        boolean wasFirst = false;
         for (Element element : elements) {
-            result.append(element).append(" ");
+            if (wasFirst) {
+                result.append(" +");
+            }
+            wasFirst = true;
+            result.append(element);
+
         }
         return result.toString();
     }

@@ -2,6 +2,7 @@ package controller;
 
 import algorithm.*;
 import algorithm.utils.Arithmetic;
+import algorithm.utils.NumberType;
 import algorithm.utils.Constants;
 import algorithm.utils.Params;
 import javafx.beans.binding.Bindings;
@@ -37,6 +38,8 @@ public class MainController implements Initializable {
 	@FXML
 	public Pane precisionPane;
 	@FXML
+	public Pane arithmeticPane;
+	@FXML
 	private Button startButton;
 	@FXML
 	private TextField polynomialInput;
@@ -52,6 +55,8 @@ public class MainController implements Initializable {
 	private TextField iterationsInput;
 	@FXML
 	private TextField precisionInput;
+	@FXML
+	private ChoiceBox<NumberType> typeChoice;
 	@FXML
 	private ChoiceBox<Arithmetic> arithmeticChoice;
 
@@ -92,10 +97,14 @@ public class MainController implements Initializable {
 						.or(precisionInput.textProperty().isEmpty())
 		);
 
-		arithmeticChoice.setValue(Arithmetic.FLOATING);
+		typeChoice.setValue(NumberType.FLOATING);
+		arithmeticChoice.setValue(Arithmetic.INTERVAL);
+		arithmeticPane.visibleProperty().bind(Bindings.createBooleanBinding(
+				() -> NumberType.FLOATING.equals(typeChoice.getValue()), typeChoice.valueProperty())
+		);
 
 		precisionPane.visibleProperty().bind(Bindings.createBooleanBinding(
-		        () -> Arithmetic.EXTENDED.equals(arithmeticChoice.getValue()), arithmeticChoice.valueProperty())
+		        () -> NumberType.ARBITRARY.equals(typeChoice.getValue()), typeChoice.valueProperty())
         );
 
 
@@ -169,7 +178,11 @@ public class MainController implements Initializable {
 		alert.setHeaderText("Ooops...");
 		final String message = StringUtils.isNotBlank(e.getMessage()) ?
 				e.getMessage() : Arrays.toString(e.getStackTrace());
-		alert.setContentText(message);
+//		alert.setContentText(message);
+		Text result = new Text(message);
+		result.setWrappingWidth(500);
+		alert.getDialogPane().setContent(result);
+		alert.initModality(Modality.NONE);
 		alert.showAndWait();
 	}
 
@@ -203,6 +216,10 @@ public class MainController implements Initializable {
 
 	public TextField getPrecisionInput() {
 		return precisionInput;
+	}
+
+	public ChoiceBox<NumberType> getTypeChoice() {
+		return typeChoice;
 	}
 
 	public ChoiceBox<Arithmetic> getArithmeticChoice() {
