@@ -16,7 +16,8 @@ public class Interval<V extends Number & Comparable<V>> {
     }
 
     public Interval(NumberWrapper<V> lower, NumberWrapper<V> upper) {
-        if (upper.lessThan(lower)) throw new RuntimeException("Upper bound need to be higher than lower! Received [" + lower + "; " + upper + "].");
+        if (upper.lessThan(lower))
+            throw new RuntimeException("Upper bound need to be higher than lower! Received [" + lower + "; " + upper + "].");
         this.lower = lower;
         this.upper = upper;
         setDelta(lower, upper);
@@ -40,8 +41,8 @@ public class Interval<V extends Number & Comparable<V>> {
     Interval<V> getCenterPoint() {
         final NumberWrapper<V> sumCeiling = lower.addCeiling(upper);
         final NumberWrapper<V> sumFloor = lower.addFloor(upper);
-        final NumberWrapper<V> lowerBound = sumCeiling.divideCeiling("2");
-        final NumberWrapper<V> upperBound = sumFloor.divideFloor("2");
+        final NumberWrapper<V> upperBound = sumCeiling.divideCeiling("2");
+        final NumberWrapper<V> lowerBound = sumFloor.divideFloor("2");
 
         return new Interval<>(lowerBound, upperBound);
     }

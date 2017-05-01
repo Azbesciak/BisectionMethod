@@ -24,6 +24,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -74,17 +75,9 @@ public class MainController implements Initializable {
 	}
 
 	private boolean isValueLower(String lower, String upper) {
-		if (StringUtils.isBlank(lower)) {
-			lower = "0";
-		} else {
-			lower = lower.replace(",", ".");
-		}
-		if (StringUtils.isBlank(upper)) {
-			upper = "0";
-		} else {
-			upper = upper.replace(",", ".");
-		}
-
+		lower = lower.replace(",", ".");
+		upper = upper.replace(",", ".");
+		if (!NumberUtils.isNumber(lower) || !NumberUtils.isNumber(upper)) return false;
 		return new BigDecimal(lower).compareTo(new BigDecimal(upper)) <= 0;
 	}
 
