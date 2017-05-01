@@ -16,6 +16,7 @@ public class Interval<V extends Number & Comparable<V>> {
     }
 
     public Interval(NumberWrapper<V> lower, NumberWrapper<V> upper) {
+        if (upper.lessThan(lower)) throw new RuntimeException("Upper bound need to be higher than lower! Received [" + lower + "; " + upper + "].");
         this.lower = lower;
         this.upper = upper;
         setDelta(lower, upper);
@@ -26,7 +27,7 @@ public class Interval<V extends Number & Comparable<V>> {
     }
 
     private boolean isPoint() {
-        return lower.equals(upper);
+        return lower.equalTo(upper);
     }
 
     private String toSimpleString() {
@@ -125,7 +126,11 @@ public class Interval<V extends Number & Comparable<V>> {
     }
 
     public String getIntervalWithDelta() {
-        return toSimpleString() + " \u0394 " + delta.getFloorStringValue();
+        String result = toSimpleString();
+        if (!isPoint()) {
+            result += " \u0394 " + delta.getFloorStringValue();
+        }
+        return result;
     }
 
     @Override

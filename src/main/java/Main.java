@@ -11,7 +11,6 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		new BigFloat("1", BinaryMathContext.BINARY64);
 		Parent root = FXMLLoader.load(getClass().getResource("main-window.fxml"));
 		primaryStage.getIcons().add(new Image("./stack-overflow.png"));
 		primaryStage.setTitle("Bisection Method");

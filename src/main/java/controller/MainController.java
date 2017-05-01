@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -61,10 +62,30 @@ public class MainController implements Initializable {
 	private ChoiceBox<Arithmetic> arithmeticChoice;
 
 	private BooleanBinding matchesRegex(final TextField field, final Pattern pattern) {
-
 		return Bindings.createBooleanBinding(
 				() -> pattern.matcher(field.getText()).matches(), field.textProperty()
 		);
+	}
+	private BooleanBinding isScopeCorrect(final TextField lower, final TextField upper) {
+		return Bindings.createBooleanBinding(
+				() -> isValueLower(lower.getText(), upper.getText()),
+				lower.textProperty(), upper.textProperty()
+		);
+	}
+
+	private boolean isValueLower(String lower, String upper) {
+		if (StringUtils.isBlank(lower)) {
+			lower = "0";
+		} else {
+			lower = lower.replace(",", ".");
+		}
+		if (StringUtils.isBlank(upper)) {
+			upper = "0";
+		} else {
+			upper = upper.replace(",", ".");
+		}
+
+		return new BigDecimal(lower).compareTo(new BigDecimal(upper)) <= 0;
 	}
 
 	/**
@@ -93,7 +114,7 @@ public class MainController implements Initializable {
 						.or(scopeEpsilonInput.textProperty().isEmpty())
 						.or(resultEpsilonInput.textProperty().isEmpty())
 						.or(iterationsInput.textProperty().isEmpty())
-						.or(upperBoundInput.textProperty().lessThan(lowerBoundInput.textProperty()))
+						.or(isScopeCorrect(lowerBoundInput, upperBoundInput).not())
 						.or(precisionInput.textProperty().isEmpty())
 		);
 
